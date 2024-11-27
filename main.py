@@ -66,7 +66,7 @@ def calcular_rota(grafo, lista_clientes):
         print("1. Busca em Profundidade")
         print("2. Busca em Largura")
         print("3. Dijkstra")
-        print("4. Floyd-Warshall (Menor distância)")
+        print("4. Floyd-Warshall")
         print("5. Bellman-Ford")
         print("6. Voltar")
         escolha = input("Escolha um método: ")
