@@ -12,13 +12,13 @@ def menu():
         opcao = input("Escolha uma opção: ")
 
         if opcao == "1":
-            print("Iniciando a operação dos Correios para o CD.")
+            print("Saudações!")
             gerenciar_rotas(grafo)
         elif opcao == "2":
-            print("Finalizando aplicação.")
+            print("Saindo aqui, valeu!")
             break
         else:
-            print("Opção inválida.")
+            print("Visshhhhh, é por aqui não.")
 
 
 def gerenciar_rotas(grafo):
@@ -34,10 +34,10 @@ def gerenciar_rotas(grafo):
         print("\nMenu de Rotas:")
         print("1. Gerar lista de clientes")
         print("2. Sair")
-        opcao = input("Escolha uma opção: ")
+        opcao = input("Bora lá, escolha uma opção: ")
 
         if opcao == "1":
-            print("\nListas de clientes disponíveis:")
+            print("\nOlha só, tua lista de clientes é essa hoje:")
             for i, lista in enumerate(opcoes_clientes, start=1):
                 print(f"{i}. {', '.join(lista)}")
 
@@ -48,16 +48,16 @@ def gerenciar_rotas(grafo):
                 print("\nLista de clientes selecionada:", ", ".join(lista_clientes))
                 calcular_rota(grafo, lista_clientes)
             else:
-                print("Opção inválida. Escolha uma lista válida.")
+                print("Vishhh, vai precisar escolher de novo.")
         elif opcao == "2":
-            print("Voltando ao menu principal.")
+            print("Voltandooo.")
             break
         else:
-            print("Opção inválida.")
+            print("Opção errada meu chapa.")
 
 
 def calcular_rota(grafo, lista_clientes):
-    print("\nAgora vamos calcular a rota real saindo dos Correios, passando pela lista de clientes e terminando no CD.")
+    print("\nAgora vamos calcular a sua rota saindo dos Correios, passando pela lista de clientes e terminando no CD.")
     rota_completa = ["Correios"] + lista_clientes + ["CD"]
     relatorio = {"rota": rota_completa, "detalhes": [], "custo_total": 0, "tempo_execucao": 0}
 
@@ -167,8 +167,6 @@ def gerenciar_relatorio(relatorio):
             exit()
         else:
             print("Opção inválida.")
-
-
 
 if __name__ == "__main__":
     menu()
