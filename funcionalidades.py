@@ -35,16 +35,6 @@ class Grafo:
                         except ValueError:
                             print(f"Aresta inválida encontrada: ({destino}, {peso})")
 
-    
-
-
-    def alterar_pesos_aleatorios(self):
-        """Altera os pesos das arestas de forma determinística."""
-        for vertice in self.grafo:
-            for vizinho in self.grafo[vertice]:
-                novo_peso = (self.grafo[vertice][vizinho] * 3) % 97 + 1
-                self.grafo[vertice][vizinho] = novo_peso
-
     def buscar_em_profundidade(self, origem, destino):
         """Busca em profundidade no grafo."""
         visitados = set()
