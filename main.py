@@ -102,16 +102,25 @@ def calcular_rota(grafo, lista_clientes):
             relatorio["custo_total"] = custo_total
             print("Rota gerada pelo algoritmo:", " -> ".join(caminho_total))
         elif escolha == "4":
-            distancias = grafo.floyd_warshall()
-            custo_total = sum(
-                distancias[rota_completa[i]][rota_completa[i + 1]]
-                for i in range(len(rota_completa) - 1)
-            )
+            distancias, predecessores = grafo.floyd_warshall()
+            caminho_total = []
+            custo_total = 0
+
+            for i in range(len(rota_completa) - 1):
+                origem, destino = rota_completa[i], rota_completa[i + 1]
+                sub_caminho = grafo.reconstruir_caminho(predecessores, origem, destino)
+
+                if sub_caminho:
+                    custo = distancias[origem][destino]
+                    custo_total += custo
+                    caminho_total.extend(sub_caminho if not caminho_total else sub_caminho[1:])
+                    relatorio["detalhes"].append((origem, destino, custo))
+                else:
+                    print(f"Nenhum caminho encontrado entre {origem} e {destino}.")
+                    return
+
             relatorio["custo_total"] = custo_total
-            relatorio["detalhes"] = [
-                (rota_completa[i], rota_completa[i + 1], distancias[rota_completa[i]][rota_completa[i + 1]])
-                for i in range(len(rota_completa) - 1)
-            ]
+            print("Rota gerada pelo algoritmo:", " -> ".join(caminho_total))
             print(f"Menor distância total para a rota: {custo_total}")
         elif escolha == "6":
             break
@@ -126,7 +135,7 @@ def gerenciar_relatorio(relatorio):
     while True:
         print("\nMenu do Relatório:")
         print("1. Gerar relatório")
-        print("2. Voltar e mudar a rota")
+        print("2. Sair e finalizar o dia")
         escolha = input("Escolha uma opção: ")
 
         if escolha == "1":
@@ -137,8 +146,8 @@ def gerenciar_relatorio(relatorio):
                 print(f"  {origem} -> {destino}: Custo {custo}")
             print(f"Custo total: {relatorio['custo_total']}")
         elif escolha == "2":
-            print("Retornando para selecionar uma nova rota.")
-            break
+            print("Está na hora de dar tchau!")
+            exit()
         else:
             print("Opção inválida.")
 
