@@ -61,7 +61,7 @@ def calcular_rota(grafo, lista_clientes):
     rota_completa = ["Correios"] + lista_clientes + ["CD"]
     relatorio = {"rota": rota_completa, "detalhes": [], "custo_total": 0, "tempo_execucao": 0}
 
-    while True:
+    while True: 
         print("\nMétodos de Busca:")
         print("1. Busca em Profundidade")
         print("2. Busca em Largura")
@@ -112,12 +112,12 @@ def calcular_rota(grafo, lista_clientes):
             print(f"Tempo total de execução: {tempo_total:.4f} segundos")
 
         elif escolha == "4":
-            # Medir o tempo de execução para Floyd-Warshall
+            # Medir o tempo total de execução para Floyd-Warshall
             inicio = time.time()
             distancias, predecessores = grafo.floyd_warshall()
             fim = time.time()
 
-            tempo_execucao = fim - inicio
+            tempo_execucao = fim - inicio  # Tempo total do algoritmo
             caminho_total = []
             custo_total = 0
 
@@ -129,7 +129,10 @@ def calcular_rota(grafo, lista_clientes):
                     custo = distancias[origem][destino]
                     custo_total += custo
                     caminho_total.extend(sub_caminho if not caminho_total else sub_caminho[1:])
-                    relatorio["detalhes"].append((origem, destino, custo, tempo_execucao))
+
+                    # Atribuir um tempo fixo hipotético para cada subrota
+                    tempo_por_subrota = tempo_execucao / (len(rota_completa) - 1)
+                    relatorio["detalhes"].append((origem, destino, custo, tempo_por_subrota))
                 else:
                     print(f"Nenhum caminho encontrado entre {origem} e {destino}.")
                     return
@@ -138,6 +141,7 @@ def calcular_rota(grafo, lista_clientes):
             relatorio["tempo_execucao"] = tempo_execucao
             print("Rota gerada pelo algoritmo Floyd-Warshall:", " -> ".join(caminho_total))
             print(f"Tempo total de execução: {tempo_execucao:.4f} segundos")
+
         elif escolha == "6":
             break
         else:
