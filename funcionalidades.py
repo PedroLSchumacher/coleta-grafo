@@ -31,7 +31,7 @@ class Grafo:
                             peso = int(peso.strip())
                             # Adicionando a aresta no grafo
                             self.grafo[vertice][destino] = peso
-                            print(f"Arestra válida: {vertice} -> {destino}, {peso}")
+                            #print(f"Arestra válida: {vertice} -> {destino}, {peso}")
                         except ValueError:
                             print(f"Aresta inválida encontrada: ({destino}, {peso})")
 
@@ -116,22 +116,40 @@ class Grafo:
         return caminho if distancias[destino] != float('inf') else None
 
     def floyd_warshall(self):
-        """Busca pelo algoritmo de Floyd-Warshall."""
         vertices = list(self.grafo.keys())
-        n = len(vertices)
         dist = {v: {u: float('inf') for u in vertices} for v in vertices}
+        pred = {v: {u: None for u in vertices} for v in vertices}  # Predecessores
 
+        # Inicializar distâncias e predecessores
         for v in self.grafo:
             dist[v][v] = 0
             for vizinho, peso in self.grafo[v].items():
                 dist[v][vizinho] = peso
+                pred[v][vizinho] = v  # Vizinho direto como predecessor
 
+        # Algoritmo de Floyd-Warshall
         for k in vertices:
             for i in vertices:
                 for j in vertices:
-                    dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j])
+                    if dist[i][k] + dist[k][j] < dist[i][j]:
+                        dist[i][j] = dist[i][k] + dist[k][j]
+                        pred[i][j] = pred[k][j]
 
-        return dist
+        return dist, pred
+
+    @staticmethod    
+    def reconstruir_caminho(pred, origem, destino):
+        """Reconstrói o caminho entre origem e destino usando a matriz de predecessores."""
+        caminho = []
+        atual = destino
+        while atual:
+            caminho.insert(0, atual)
+            if atual == origem:
+                break
+            atual = pred[origem][atual]
+        if caminho[0] == origem:
+            return caminho
+        return None
 
     def bellman_ford(self, origem, destino):
         """Busca pelo algoritmo de Bellman-Ford."""
@@ -155,32 +173,4 @@ class Grafo:
         caminho.reverse()
         return caminho if distancias[destino] != float('inf') else None
 
-    def gerar_rota_aleatoria(self, origem, destino, minimo_vertices=6):
-        if origem not in self.grafo or destino not in self.grafo:
-            print(f"Erro: Origem ({origem}) ou destino ({destino}) não encontrados no grafo.")
-            return []
-
-        rota = [origem]
-        visitados = {origem}
-
-        while len(rota) < minimo_vertices - 1:  # -1 porque o destino será adicionado ao final
-            vizinhos = []
-            for vizinho in self.grafo[rota[-1]]:
-                if vizinho not in visitados:
-                    vizinhos.append(vizinho)
-
-            if not vizinhos:  # Se não houver vizinhos disponíveis
-                print("Erro: Não há caminhos suficientes para gerar a rota.")
-                return []
-
-            # Escolhe o próximo vizinho manualmente (sem random)
-            indice = (len(rota) * 7 + 5) % len(vizinhos)  # Método determinístico para simular escolha
-            proximo = vizinhos[indice]
-
-            rota.append(proximo)
-            visitados.add(proximo)
-
-        # Adiciona o destino
-        rota.append(destino)
-        return rota
 
