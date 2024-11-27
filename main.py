@@ -108,7 +108,7 @@ def calcular_rota(grafo, lista_clientes):
 
             relatorio["custo_total"] = custo_total
             relatorio["tempo_execucao"] = tempo_total
-            print("Rota gerada pelo algoritmo:", " -> ".join(caminho_total))
+            print("Rota completa:", " -> ".join(caminho_total))
             print(f"Tempo total de execução: {tempo_total:.4f} segundos")
 
         elif escolha == "4":
@@ -160,7 +160,7 @@ def gerenciar_relatorio(relatorio):
 
         if escolha == "1":
             print("\nRelatório da Rota:")
-            print("Rota completa:", " -> ".join(relatorio["rota"]))
+            print("Rota do dia:", " -> ".join(relatorio["rota"]))
             print("Detalhes da rota:")
             for origem, destino, custo, tempo in relatorio["detalhes"]:
                 print(f"  {origem} -> {destino}: Custo {custo}, Tempo: {tempo:.4f} segundos")
