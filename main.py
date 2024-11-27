@@ -1,5 +1,5 @@
 from funcionalidades import Grafo
-
+import time
 
 def menu():
     grafo = Grafo()
@@ -59,7 +59,7 @@ def gerenciar_rotas(grafo):
 def calcular_rota(grafo, lista_clientes):
     print("\nAgora vamos calcular a rota real saindo dos Correios, passando pela lista de clientes e terminando no CD.")
     rota_completa = ["Correios"] + lista_clientes + ["CD"]
-    relatorio = {"rota": rota_completa, "detalhes": [], "custo_total": 0}
+    relatorio = {"rota": rota_completa, "detalhes": [], "custo_total": 0, "tempo_execucao": 0}
 
     while True:
         print("\nMétodos de Busca:")
@@ -74,10 +74,13 @@ def calcular_rota(grafo, lista_clientes):
         if escolha in {"1", "2", "3", "5"}:
             caminho_total = []
             custo_total = 0
+            tempo_total = 0  # Variável para somar os tempos de execução
 
             for i in range(len(rota_completa) - 1):
                 origem, destino = rota_completa[i], rota_completa[i + 1]
 
+                # Medir o tempo de execução
+                inicio = time.time()
                 if escolha == "1":
                     sub_caminho = grafo.buscar_em_profundidade(origem, destino)
                 elif escolha == "2":
@@ -86,6 +89,10 @@ def calcular_rota(grafo, lista_clientes):
                     sub_caminho = grafo.dijkstra(origem, destino)
                 elif escolha == "5":
                     sub_caminho = grafo.bellman_ford(origem, destino)
+                fim = time.time()
+
+                tempo_execucao = fim - inicio
+                tempo_total += tempo_execucao
 
                 if sub_caminho:
                     custo = sum(
@@ -94,15 +101,23 @@ def calcular_rota(grafo, lista_clientes):
                     )
                     custo_total += custo
                     caminho_total.extend(sub_caminho if not caminho_total else sub_caminho[1:])
-                    relatorio["detalhes"].append((origem, destino, custo))
+                    relatorio["detalhes"].append((origem, destino, custo, tempo_execucao))
                 else:
                     print(f"Nenhum caminho encontrado entre {origem} e {destino}.")
                     return
 
             relatorio["custo_total"] = custo_total
+            relatorio["tempo_execucao"] = tempo_total
             print("Rota gerada pelo algoritmo:", " -> ".join(caminho_total))
+            print(f"Tempo total de execução: {tempo_total:.4f} segundos")
+
         elif escolha == "4":
+            # Medir o tempo de execução para Floyd-Warshall
+            inicio = time.time()
             distancias, predecessores = grafo.floyd_warshall()
+            fim = time.time()
+
+            tempo_execucao = fim - inicio
             caminho_total = []
             custo_total = 0
 
@@ -114,14 +129,15 @@ def calcular_rota(grafo, lista_clientes):
                     custo = distancias[origem][destino]
                     custo_total += custo
                     caminho_total.extend(sub_caminho if not caminho_total else sub_caminho[1:])
-                    relatorio["detalhes"].append((origem, destino, custo))
+                    relatorio["detalhes"].append((origem, destino, custo, tempo_execucao))
                 else:
                     print(f"Nenhum caminho encontrado entre {origem} e {destino}.")
                     return
 
             relatorio["custo_total"] = custo_total
-            print("Rota gerada pelo algoritmo:", " -> ".join(caminho_total))
-            print(f"Menor distância total para a rota: {custo_total}")
+            relatorio["tempo_execucao"] = tempo_execucao
+            print("Rota gerada pelo algoritmo Floyd-Warshall:", " -> ".join(caminho_total))
+            print(f"Tempo total de execução: {tempo_execucao:.4f} segundos")
         elif escolha == "6":
             break
         else:
@@ -142,14 +158,16 @@ def gerenciar_relatorio(relatorio):
             print("\nRelatório da Rota:")
             print("Rota completa:", " -> ".join(relatorio["rota"]))
             print("Detalhes da rota:")
-            for origem, destino, custo in relatorio["detalhes"]:
-                print(f"  {origem} -> {destino}: Custo {custo}")
+            for origem, destino, custo, tempo in relatorio["detalhes"]:
+                print(f"  {origem} -> {destino}: Custo {custo}, Tempo: {tempo:.4f} segundos")
             print(f"Custo total: {relatorio['custo_total']}")
+            print(f"Tempo total de execução: {relatorio['tempo_execucao']:.4f} segundos")
         elif escolha == "2":
             print("Está na hora de dar tchau!")
             exit()
         else:
             print("Opção inválida.")
+
 
 
 if __name__ == "__main__":
